@@ -1,0 +1,4 @@
+(executable
+ (public_name loxtite_test)
+ (name main)
+ (libraries loxtite))
