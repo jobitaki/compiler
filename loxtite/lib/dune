@@ -1,15 +1,21 @@
 (library
  (public_name loxtite)
  (name loxtite)
- (modules lexer parser))
+ (libraries llvm)
+ (preprocess
+  (pps ppx_deriving.show)))
 
 (rule
  (targets lexer.ml)
  (deps lexer.mll)
- (action (run ocamllex %{deps})))
+ (action
+  (run ocamllex %{deps})))
 
-(rule
- (targets parser.ml parser.mli)
- (deps parser.mly)
- (action (run menhir %{deps})))
+; (rule
+;  (targets parser.ml parser.mli)
+;  (deps parser.mly)
+;  (action
+;   (run menhir --infer --base parser %{deps})))
 
+(menhir
+ (modules parser))

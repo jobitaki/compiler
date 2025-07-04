@@ -18,7 +18,7 @@ let next_line lexbuf =
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 
-let int = '-'? digit+ (* regex for integers *)
+let float = '-'? digit+ '.' digit+ (* regex for floats *)
 let id = (alpha) (alpha|digit|'_')* (* regex for identifiers *)
 let whitespace = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"
@@ -44,7 +44,6 @@ rule read_token =
     | ">=" { GREATER_EQUAL }
     | "<=" { LESS_EQUAL }
     | "var" { VAR }
-    | "class" { CLASS }
     | "and" { AND }
     | "or" { OR }
     | "if" { IF }
@@ -53,7 +52,7 @@ rule read_token =
     | "while" { WHILE }
     | "fun" { FUN }
     | "return" { RETURN }
-    | "nil" { NIL }
+    | "null" { NULL }
     | "printf" { PRINTF }
     (* We recursively call read_token because we don't return anything 
        meaningful. We recursively call the same rule again when we want to
@@ -63,7 +62,7 @@ rule read_token =
     | "//" { read_single_line_comment lexbuf }
     | "/*" { read_multi_line_comment lexbuf }
     (* Lexing.lexeme lexbuf returns the string read *)
-    | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
+    | float { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
     | id { ID (Lexing.lexeme lexbuf) }
     (* When string detected, trigger string rule with a new buffer *)
     | '"' {read_string (Buffer.create 17) lexbuf }
