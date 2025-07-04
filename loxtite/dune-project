@@ -1,5 +1,7 @@
 (lang dune 3.19)
 
+(using menhir 2.0)
+
 (name loxtite)
 
 (generate_opam_files true)
@@ -19,7 +21,7 @@
  (name loxtite)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune menhir)
+ (depends ocaml dune menhir llvm ppx_deriving)
  (tags
   ("add topics" "to describe" your project)))
 

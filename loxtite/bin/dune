@@ -1,4 +1,4 @@
 (executable
- (public_name loxtite_test)
+ (public_name loxtite)
  (name main)
  (libraries loxtite))

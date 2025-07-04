@@ -51,6 +51,7 @@ type stmt =
   | While of expr * stmt list
   | For of string located * expr * expr * expr * stmt list
   | Return of expr option (* What's an option? None or something *)
+  | Printf of string
   (* | Break
   | Continue
   | Block of stmt list *)

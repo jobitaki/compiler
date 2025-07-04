@@ -85,19 +85,19 @@ statement:
   | VAR id = ID EQUAL e = expression? SEMICOLON {
       VarDeclaration (make_located id $startpos(id), e)
     }
-  | IF LPAREN cond = expression RPAREN LBRACE then_stmt = block_or_single
-    RBRACE else_part = else_clause? {
+  | IF LPAREN cond = expression RPAREN then_stmt = block_or_single 
+    else_part = else_clause? {
       If (cond, then_stmt, else_part)    
     }
-  | WHILE LPAREN cond = expression RPAREN LBRACE body = block_or_single
-    RBRACE {
+  | WHILE LPAREN cond = expression RPAREN body = block_or_single {
       While (cond, body)
     }
   | FOR LPAREN var = ID EQUAL init = expression SEMICOLON cond = expression
-    SEMICOLON ID EQUAL incr = expression RPAREN LBRACE body = block_or_single RBRACE {
+    SEMICOLON ID EQUAL incr = expression RPAREN body = block_or_single {
       For (make_located var $startpos(var), init, cond, incr, body)
     }
   | RETURN e = expression? SEMICOLON { Return (e) }
+  | PRINTF LPAREN s = STRING RPAREN SEMICOLON { Printf s }
 
 else_clause:
   | ELSE s = block_or_single { s }

@@ -1,28 +1,28 @@
 open Loxtite
 
-let print_token = function
-  | Parser.ID s -> Printf.printf "ID(%s)\n" s
-  | Parser.INT i -> Printf.printf "INT(%d)\n" i
-  | Parser.STRING s -> Printf.printf "STRING(%s)\n" s
-  | Parser.LPAREN -> Printf.printf "LPAREN\n"
-  | Parser.RPAREN -> Printf.printf "RPAREN\n"
-  | Parser.EQUAL -> Printf.printf "EQUAL\n"
-  | Parser.EOF -> Printf.printf "EOF\n"
-  | _ -> Printf.printf "OTHER_TOKEN\n"
+let usage_msg = "my_compiler [options] <file>"
+let input_file = ref ""
+let debug_mode = ref false
 
-let rec tokenize_all lexbuf =
-  match Lexer.read_token lexbuf with
-  | Parser.EOF -> print_token Parser.EOF
-  | token -> 
-      print_token token;
-      tokenize_all lexbuf
+let set_input_file filename = input_file := filename
+
+let spec_list = [
+  ("-debug", Arg.Set debug_mode, "Enable debug mode");
+  ("-ast", Arg.Set debug_mode, "Print AST (same as -debug for now)");
+]
 
 let () =
-  let input = 
-    if Array.length Sys.argv > 1 then Sys.argv.(1)
-    else "let x = 42"
-  in
-  let lexbuf = Lexing.from_string input in
-  Printf.printf "Tokenizing: %s\n" input;
-  Printf.printf "Tokens:\n";
-  tokenize_all lexbuf
+  Arg.parse spec_list set_input_file usage_msg;
+  
+  if !input_file = "" then begin
+    Printf.printf "Usage: %s\n" usage_msg;
+    Printf.printf "Options:\n";
+    Printf.printf "  -debug    Enable debug mode\n";
+    Printf.printf "  -ast      Print AST\n";
+    exit 1
+  end;
+
+  if !debug_mode then
+    Printf.printf "Compiling file: %s\n" !input_file;
+
+  Compiler.compile_file !input_file
